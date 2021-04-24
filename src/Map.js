@@ -20,6 +20,7 @@ class Map extends React.Component{
      
      markerPosition: {
       lat: this.props.center.lat,
+      lng: this.props.center.lng,
   }
     }
    }
