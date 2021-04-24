@@ -19,7 +19,6 @@ class Map extends React.Component{
      },
      
      markerPosition: {
-      lng: this.props.center.lng
   }
     }
    }
