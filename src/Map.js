@@ -7,13 +7,15 @@ Geocode.setApiKey(" AIzaSyBtyLhfDd753KZiq2qOSQsizVImPZM7P2I" );
 Geocode.enableDebug();
 
 class Map extends React.Component{
-  constructor( props ){
-    super( props );
+
+  constructor(props){
+    super(props);
     this.state = {
      address: '',
      city: '',
      area: '',
      state: '',
+
      mapPosition: {
       lat: this.props.center.lat,
       lng: this.props.center.lng
@@ -22,7 +24,7 @@ class Map extends React.Component{
      markerPosition: {
       lat: this.props.center.lat,
       lng: this.props.center.lng,
-  }
+    }
     }
    }
 
@@ -35,15 +37,13 @@ class Map extends React.Component{
         area = this.getArea( addressArray ),
         state = this.getState( addressArray );
       
-        console.log( 'city', city, area, state );
-      
         this.setState( {
-        address: ( address ) ? address : '',
-        area: ( area ) ? area : '',
-        city: ( city ) ? city : '',
-        state: ( state ) ? state : '',
-        })
-      },
+          address: ( address ) ? address : '',
+          area: ( area ) ? area : '',
+          city: ( city ) ? city : '',
+          state: ( state ) ? state : '',
+          })
+        },
         error => {
           console.error(error);
         }
@@ -52,16 +52,16 @@ class Map extends React.Component{
 
   shouldComponentUpdate( nextProps, nextState ){
     if (
-      this.state.markerPosition.lat !== this.props.center.lat ||
-      this.state.address !== nextState.address ||
-      this.state.city !== nextState.city ||
-      this.state.area !== nextState.area ||
-      this.state.state !== nextState.state
-    ) {
-       return true
-      } else if ( this.props.center.lat === nextProps.center.lat ){
-      return false
-    }
+        this.state.markerPosition.lat !== this.props.center.lat ||
+        this.state.address !== nextState.address ||
+        this.state.city !== nextState.city ||
+        this.state.area !== nextState.area ||
+        this.state.state !== nextState.state
+      ) {
+        return true
+        } else if ( this.props.center.lat === nextProps.center.lat ){
+        return false
+      }
   }
 
   getCity = ( addressArray ) => {
@@ -75,16 +75,17 @@ class Map extends React.Component{
   };
 
   getArea = ( addressArray ) => {
-    let area = '';
-    for( let i = 0; i < addressArray.length; i++ ) {
-    if ( addressArray[ i ].types[0]  ) {
-      for ( let j = 0; j < addressArray[ i ].types.length; j++ ) {
-      if ( 'sublocality_level_1' === addressArray[ i ].types[j] || 'locality' === addressArray[ i ].types[j] ) {
-        area = addressArray[ i ].long_name;
-        return area;
+      let area = '';
+      for( let i = 0; i < addressArray.length; i++ ) {
+      if ( addressArray[ i ].types[0]  ) 
+      {
+        for ( let j = 0; j < addressArray[ i ].types.length; j++ ) {
+         if ( 'sublocality_level_1' === addressArray[ i ].types[j] || 'locality' === addressArray[ i ].types[j] ) {
+           area = addressArray[ i ].long_name;
+            return area;
+         }
+        }
       }
-      }
-    }
     }
   };
 
@@ -110,24 +111,24 @@ class Map extends React.Component{
 
 
   onMarkerDragEnd = ( event ) => {
-    console.log( 'event', event );
     let newLat = event.latLng.lat(),
-    newLng = event.latLng.lng(),
-    addressArray = [];
+    newLng = event.latLng.lng();
+    
     Geocode.fromLatLng( newLat , newLng ).then(
-    response => {
-      const address = response.results[0].formatted_address,
-      addressArray =  response.results[0].address_components,
-      city = this.getCity( addressArray ),
-      area = this.getArea( addressArray ),
-      state = this.getState( addressArray );
-      this.setState( {
-        address: ( address ) ? address : '',
-        area: ( area ) ? area : '',
-        city: ( city ) ? city : '',
-        state: ( state ) ? state : ''
-      } )
-   },
+      response => {
+        const address = response.results[0].formatted_address,
+        addressArray =  response.results[0].address_components,
+        city = this.getCity( addressArray ),
+        area = this.getArea( addressArray ),
+        state = this.getState( addressArray );
+
+        this.setState( {
+          address: ( address ) ? address : '',
+          area: ( area ) ? area : '',
+          city: ( city ) ? city : '',
+          state: ( state ) ? state : ''
+        } )
+    },
     error => {
     console.error(error);
    }
@@ -143,7 +144,6 @@ class Map extends React.Component{
       latValue = place.geometry.location.lat(),
       lngValue = place.geometry.location.lng();
 
-  // Set these values in the state.
       this.setState({
       address: ( address ) ? address : '',
       area: ( area ) ? area : '',
@@ -185,18 +185,20 @@ class Map extends React.Component{
           position={{ lat: this.state.markerPosition.lat, lng: this.state.markerPosition.lng }}
       />
       <Marker/>
-        <Autocomplete
-          style={{  
-            width: '100%',
-            height: '40px',
-            paddingLeft: '16px',
-            marginTop: '2px',
-            marginBottom: '100px'
-          }}
-          onPlaceSelected={ this.onPlaceSelected }
-          types={['(regions)']}
-        />
-        </GoogleMap>
+
+      <Autocomplete
+        style={{  
+          width: '98%',
+          height: '40px',
+          paddingLeft: '15px',
+          marginTop: '1px',
+          marginBottom: '100px'
+        }}
+        onPlaceSelected={ this.onPlaceSelected }
+        types={['(regions)']}
+      />
+      
+      </GoogleMap>
       )
    )
   );
@@ -206,21 +208,25 @@ class Map extends React.Component{
     map = <div>
       <div>
         <div className="form-group">
-        <label htmlFor="">City</label>
-        <input type="text" name="city" className="form-control" onChange={ this.onChange } readOnly="readOnly" value={ this.state.city }/>
+          <label htmlFor="">City</label>
+          <input type="text" name="city" className="form-control" onChange={ this.onChange } readOnly="readOnly" value={ this.state.city }/>
         </div>
+
         <div className="form-group">
-        <label htmlFor="">Area</label>
-        <input type="text" name="area" className="form-control" onChange={ this.onChange } readOnly="readOnly" value={ this.state.area }/>
+          <label htmlFor="">Area</label>
+          <input type="text" name="area" className="form-control" onChange={ this.onChange } readOnly="readOnly" value={ this.state.area }/>
         </div>
+
         <div className="form-group">
-        <label htmlFor="">State</label>
-        <input type="text" name="state" className="form-control" onChange={ this.onChange } readOnly="readOnly" value={ this.state.state }/>
+          <label htmlFor="">State</label>
+          <input type="text" name="state" className="form-control" onChange={ this.onChange } readOnly="readOnly" value={ this.state.state }/>
         </div>
+
         <div className="form-group">
-        <label htmlFor="">Address</label>
-        <input type="text" name="address" className="form-control" onChange={ this.onChange } readOnly="readOnly" value={ this.state.address }/>
+          <label htmlFor="">Address</label>
+          <input type="text" name="address" className="form-control" onChange={ this.onChange } readOnly="readOnly" value={ this.state.address }/>
         </div>
+        
       </div>
 
      <AsyncMap
