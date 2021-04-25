@@ -188,6 +188,7 @@ class Map extends React.Component{
 
       <Autocomplete
         style={{  
+          width: '98%',
         }}
         onPlaceSelected={ this.onPlaceSelected }
         types={['(regions)']}
