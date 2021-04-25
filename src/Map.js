@@ -191,6 +191,7 @@ class Map extends React.Component{
           width: '98%',
           height: '40px',
           paddingLeft: '15px',
+          marginTop: '1px',
         }}
         onPlaceSelected={ this.onPlaceSelected }
         types={['(regions)']}
