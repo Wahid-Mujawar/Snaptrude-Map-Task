@@ -107,6 +107,34 @@ componentDidMount() {
 
 };
 
+
+onMarkerDragEnd = ( event ) => {
+  console.log( 'event', event );
+  let newLat = event.latLng.lat(),
+   newLng = event.latLng.lng(),
+   addressArray = [];
+Geocode.fromLatLng( newLat , newLng ).then(
+   response => {
+    const address = response.results[0].formatted_address,
+     addressArray =  response.results[0].address_components,
+     city = this.getCity( addressArray ),
+     area = this.getArea( addressArray ),
+     state = this.getState( addressArray );
+this.setState( {
+     address: ( address ) ? address : '',
+     area: ( area ) ? area : '',
+     city: ( city ) ? city : '',
+     state: ( state ) ? state : ''
+    } )
+   },
+   error => {
+    console.error(error);
+   }
+  );
+ };
+
+
+
 render() {
 const AsyncMap = withScriptjs(
    withGoogleMap(
@@ -140,8 +168,18 @@ let map;
        <input type="text" name="address" className="form-control" onChange={ this.onChange } readOnly="readOnly" value={ this.state.address }/>
       </div>
      </div>
+
+
+     <Marker google={this.props.google}
+       name={'Dolores park'}
+          draggable={true}
+          onDragEnd={ this.onMarkerDragEnd }
+             position={{ lat: this.state.markerPosition.lat, lng: this.state.markerPosition.lng }}
+      />
+      <Marker/>
+
      <AsyncMap
-      googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyDGe5vjL8wBmilLzoJ0jNIwe9SAuH2xS_0&libraries=places"
+      googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyBtyLhfDd753KZiq2qOSQsizVImPZM7P2I_0&libraries=places"
       loadingElement={
        <div style={{ height: `100%` }} />
       }
