@@ -1,6 +1,7 @@
 import React from 'react'
 import { withGoogleMap, GoogleMap, withScriptjs, InfoWindow, Marker } from "react-google-maps";
 import Geocode from "react-geocode";
+import Autocomplete from 'react-google-autocomplete';
 
 Geocode.setApiKey(" AIzaSyBtyLhfDd753KZiq2qOSQsizVImPZM7P2I" );
 Geocode.enableDebug();
@@ -133,6 +134,32 @@ class Map extends React.Component{
   );
  };
 
+  onPlaceSelected = ( place ) => {
+    const address = place.formatted_address,
+      addressArray =  place.address_components,
+      city = this.getCity( addressArray ),
+      area = this.getArea( addressArray ),
+      state = this.getState( addressArray ),
+      latValue = place.geometry.location.lat(),
+      lngValue = place.geometry.location.lng();
+
+  // Set these values in the state.
+      this.setState({
+      address: ( address ) ? address : '',
+      area: ( area ) ? area : '',
+      city: ( city ) ? city : '',
+      state: ( state ) ? state : '',
+      markerPosition: {
+        lat: latValue,
+        lng: lngValue
+      },
+      mapPosition: {
+        lat: latValue,
+        lng: lngValue
+      },
+    })
+  };
+
   render() {
   const AsyncMap = withScriptjs(
     withGoogleMap(
@@ -141,16 +168,37 @@ class Map extends React.Component{
         defaultZoom={this.props.zoom}
         defaultCenter={{ lat: this.state.mapPosition.lat, lng: this.state.mapPosition.lng }}
       >
-     <Marker google={this.props.google}
-       name={'Dolores park'}
+
+      <InfoWindow
+       onClose={this.onInfoWindowClose}
+       position={{ lat: ( this.state.markerPosition.lat + 0.0018 ), lng: this.state.markerPosition.lng }}
+      >
+       <div>
+        <span style={{ padding: 0, margin: 0 }}>{ this.state.address }</span>
+       </div>
+      </InfoWindow>
+
+      <Marker google={this.props.google}
+        name={'Dolores park'}
           draggable={true}
           onDragEnd={ this.onMarkerDragEnd }
-             position={{ lat: this.state.markerPosition.lat, lng: this.state.markerPosition.lng }}
+          position={{ lat: this.state.markerPosition.lat, lng: this.state.markerPosition.lng }}
       />
       <Marker/>
-      </GoogleMap>
-    )
-  )
+        <Autocomplete
+          style={{  
+            width: '100%',
+            height: '40px',
+            paddingLeft: '16px',
+            marginTop: '2px',
+            marginBottom: '100px'
+          }}
+          onPlaceSelected={ this.onPlaceSelected }
+          types={['(regions)']}
+        />
+        </GoogleMap>
+      )
+   )
   );
 
   let map;
@@ -176,7 +224,7 @@ class Map extends React.Component{
       </div>
 
      <AsyncMap
-      googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyBtyLhfDd753KZiq2qOSQsizVImPZM7P2I &libraries=places"
+      googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyBtyLhfDd753KZiq2qOSQsizVImPZM7P2I&libraries=places"
       loadingElement={
        <div style={{ height: `100%` }} />
       }
