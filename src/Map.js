@@ -236,6 +236,7 @@ class Map extends React.Component{
       containerElement={
        <div style={{height: this.props.height }} />
       }
+      mapElement={
        <div style={{height: `100%`}} />
       }
      />
