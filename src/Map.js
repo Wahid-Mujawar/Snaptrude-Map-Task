@@ -54,6 +54,7 @@ class Map extends React.Component{
     if (
         this.state.markerPosition.lat !== this.props.center.lat ||
         this.state.address !== nextState.address ||
+        this.state.city !== nextState.city ||
       ) {
         return true
         } else if (this.props.center.lat === nextProps.center.lat){
